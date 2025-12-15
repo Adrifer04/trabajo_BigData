@@ -1,0 +1,135 @@
+
+project:   
+  title: "trabajo_BigData_equipo"
+  type: website          
+  output-dir: docs       
+  preview:
+    port: 4445
+    browser: true       
+    watch-inputs: true  
+    navigate: true
+  
+include-in-header:
+  - text: |
+     <link rel = "shortcut icon" href = "imagenes/loguito.png" />
+     
+
+lightbox: true
+
+
+
+anchor-sections: true
+
+
+
+toc: true
+toc-depth: 3
+toc-location: right    
+toc-title: "Índice"   
+
+link-external-newwindow: true 
+
+crossref:
+  fig-title: Gráfico  
+  tbl-title: Tabla    
+
+
+fig-cap-location: bottom
+
+
+fig-format: png
+fig-dpi: 300
+
+
+code-copy: true
+code-overflow: wrap   #- {wrap, scroll}
+code-fold: show
+code-line-numbers: true
+
+#- embeed the source document 
+code-tools: true
+code-link: true
+
+#- Default knitr options
+knitr:
+  opts_chunk: 
+    collapse: true
+    comment: "#>" 
+    fig.asp:  7/9
+    out.width: "95%"
+    fig.align: "center"
+    fig.show: "hold"
+    R.options:
+      options(scipen = 999) 
+editor_options: 
+  chunk_output_type: console
+
+license: CC BY
+
+
+execute:
+  echo: true
+  eval: true
+  message: false
+  warning: false
+ 
+
+
+
+
+
+website:
+  title: "Champions League"            
+  favicon: imagenes/loguito.png    
+  search:   
+    location: navbar
+    type: overlay   
+    copy-button: true
+  navbar:
+    pinned: true
+    logo: "imagenes/BANNER.jpeg"   
+    background: "#0e1e5b"    
+    foreground: "#ffffff"   
+    
+    left: 
+      - icon: house-door
+        href: index.html
+    right:
+      - text: "Trabajo en equipo"     
+        href: my_trabajo_BigData.qmd   
+      - text: "Slides"
+        href: my_slides_BigData.qmd
+        target: _blank
+      - icon: github
+        href: https://github.com/Adrifer04    
+      - icon: envelope
+        url: "mailto:<aferbru@alumni.uv.es>"            
+  page-footer:
+    border: true
+    background: "#0e1e5b"         
+    left: "© 2025 Pedro Navaja"   
+    center: "Hecho con [Quarto](https://quarto.org)"
+    right:
+      - icon: github
+        href: https://github.com/Adrifer04     
+      - icon: envelope
+        url: "mailto:aferbru@alumni.uv.es"            
+    
+    
+
+
+format:
+  html:
+    page-layout: full
+    theme: 
+      -spacelab #- {cerulean, cosmo, cyborg, darkly, flatly, journal, litera, lumen, lux, materia, minty, pulse, sandstone, simplex, sketchy, slate, solar, spacelab, superhero, united, yeti}
+    css: 
+      - assets/styles.css
+    mainfont: Lato
+    highlight-style: a11y   
+
+   
+
+
+lang: es
+language: assets/_my_language-es.yml  

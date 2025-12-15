@@ -1,0 +1,536 @@
+---
+title: "La Champions League"  
+date: 2025-12-16               
+date-format: short
+format: 
+  revealjs:
+    scrollable: true
+    slide-level: 2
+    height: 900
+    width: 1600
+    toc: false
+    center-title-slide: true
+    title-slide-attributes: 
+      data-background-color: "#1f77b4"   
+    preview-links: auto  
+    link-external-newwindow: true
+    transition: fade
+    fontcolor: "#262d36"
+    highlight-style: a11y
+    code-line-numbers: true
+    number-sections: false
+    slide-number: c/t  
+    incremental: false 
+    code-fold: true  
+footer: |
+  Slides hechas con [Quarto](https://quarto.org/) 
+---
+
+---
+
+## INTRODUCCIÓN
+
+La UEFA Champions League es la competición de clubes de fútbol más prestigiosa de Europa, organizada cada año por la UEFA para determinar cuál es el mejor equipo del continente. En este torneo participan los campeones de liga y los equipos mejor clasificados de las ligas europeas más fuertes. La competición se desarrolla a lo largo de una temporada, comenzando con una fase de grupos y acabando con rondas de eliminación directa, hasta llegar a la gran final a partido único, donde el ganador levanta el codiciado trofeo de "la orejona", consolidando su lugar en la historia del fútbol.
+
+A continuación, os vamos a dar un repaso de los datos más importantes de la historia de la Champions League. Dentro del trabajo hablaremos sobre las características más importantes tanto de jugadores, de equipos, de entrenadores como de estadios. Esperamos que lo disfrutéis, y que aquellos que no sepáis tanto de este tema, aprendáis un poco más.
+
+## DATOS { .center }
+
+Para realizar el trabajo, hemos sacado los datos de la pagina webb Kaggle, una web la cual contiene millones de datos, y entre ellos, de la Champions League. Os dejamos por aqui el [enlace](https://www.kaggle.com/){target="_blank"}
+
+---
+
+## 1. EQUIPOS { .center }
+
+## 1.1 Equipos con mas temporadas
+
+```{r}
+
+library(tidyverse)
+library(ggimage) #install.packages(ggimage)
+
+
+ruta_a_datos_1 <- "./datos/probando.csv"
+
+df_completo <- read_csv(ruta_a_datos_1, locale = locale(encoding = "ISO-8859-1")) 
+
+top_15_participaciones <- df_completo %>%
+  select(Club, Participated) %>% 
+  mutate(Participated = as.numeric(Participated)) %>% 
+  arrange(desc(Participated)) %>%
+  head(15)
+
+df_logos <- data.frame(Club = c(
+  "Real Madrid CF",
+  "SL Benfica",
+  "FC Dynamo Kyiv",
+  "FC Bayern Munchen",
+  "AFC Ajax",
+  "Juventus",
+  "FC Porto",
+  "Celtic FC",
+  "Olympiacos FC",
+  "RSC Anderlecht",
+  "FC Barcelona", 
+  "Rangers FC",
+  "Linfield FC",
+  "Manchester United", 
+  "AC Milan"
+),
+Foto = c(
+  "Real_Madrid_CF.svg.webp",
+  "benfica.png",
+  "dynamo.png",
+  "bayern.png", 
+  "ajax.png",
+  "juventus.png",
+  "oporto.png",
+  "celtic.png",
+  "olympiakos.png",
+  "anderlecht.png",
+  "barsa.png",
+  "rangers.png",
+  "Linfield.png",
+  "mtu.png",
+  "milan.png"
+)
+) %>%
+  mutate(logo = file.path("imagenes", Foto))
+
+
+
+top_15_completo <- left_join(top_15_participaciones,df_logos, by = "Club") 
+
+
+
+mi_grafico <- ggplot(top_15_completo, aes(x = reorder(Club, Participated), y = Participated)) +
+  geom_col(fill = "dodgerblue3", width = 0.6) +
+  coord_flip() +
+ geom_image(aes(image = logo, y = 0), size = 0.05) +
+  geom_text(aes(label = Participated), hjust = -0.2, fontface = "bold", size = 3.5) +
+   expand_limits(y = 0) + 
+  labs(
+    title = "Top 15: Equipos con más participaciones",
+    subtitle = "Desde 1955-2023",
+    x = "Equipos", 
+    y = "Nº participaciones") +
+  theme_minimal()+
+  theme(
+    plot.title = element_text(face = "bold", size = 14),
+    axis.text.y = element_blank(),
+    axis.ticks.y = element_blank(),
+    plot.margin = margin(10, 20, 10, 20))
+
+mi_grafico
+```
+
+## 1.2 Los equipos más ganadores
+
+```{r}
+
+library(treemapify)   #install.packages("treemapify")
+library(tidyverse)
+library(janitor)
+library(ggimage)
+library(magick)
+library(highcharter)  
+
+
+ruta_a_datos_2 <- "./datos/probando.csv"
+
+df_completo <- read_csv(ruta_a_datos_2)
+
+top_10_titulos <- df_completo %>%
+  select(Club, Titles) %>% 
+  mutate(Titles = as.numeric(Titles)) %>% 
+  arrange(desc(Titles)) %>%
+  head(10)
+
+
+
+
+hchart(top_10_titulos, "treemap", hcaes(x = Club, value =Titles, color = Titles))%>%
+  hc_add_theme(hc_theme_economist()) %>% 
+  hc_size(height = 500)
+
+
+madrid <- image_read("./imagenes/madridchamp.jpg") %>% image_scale(.,"700")
+barsa <- image_read("./imagenes/barsachamp.jpg") %>% image_scale(.,"700")
+bayern <- image_read("./imagenes/bayernchamp.jpg") %>% image_scale(.,"700")
+juve <- image_read("./imagenes/juvechamp.jpg") %>% image_scale(.,"700")
+mtu <- image_read("./imagenes/mtuchamp.webp") %>% image_scale(.,"700")
+benfica <- image_read("./imagenes/benficachamp.webp") %>% image_scale(.,"700")
+liverpool <- image_read("./imagenes/liverpoolchamp.jpeg") %>% image_scale(.,"700")
+inter <- image_read("./imagenes/interchamp.jpeg") %>% image_scale(.,"700")
+ajax <- image_read("./imagenes/ajaxchamp.webp") %>% image_scale(.,"700")
+milan <- image_read("./imagenes/milanchamp.jpg") %>% image_scale(.,"700")
+
+equipos <- c(madrid, barsa, bayern, juve, mtu, benfica, liverpool, inter, ajax, milan)
+image_animate(image_scale(equipos), fps = 0.5)
+```
+
+---
+
+## 2. JUGADORES { .center }
+
+## 2.1 Máximos Goleadores
+
+
+```{r}
+library(tidyverse)
+library(ggrepel)
+
+
+ruta_a_datos_1 <- "./datos/goleadores.csv"
+
+ruta_a_datos_2 <- "./datos/participaciones.csv"
+
+
+df_completo_2 <- read_csv(ruta_a_datos_2)
+
+df_completo <- read_csv(ruta_a_datos_1)
+
+df_completo_3 <- left_join(df_completo,df_completo_2, by = "Player")
+
+top_10_goleadores <- df_completo_3 %>%
+  select(Goals, Player, Appearances) %>% 
+  mutate(Goals = as.numeric(Goals)) %>% 
+  mutate(Promedio = Goals / Appearances) %>% 
+  arrange(desc(Goals)) %>%
+  head(10)
+
+
+ggplot(top_10_goleadores, aes(x = Appearances, y = Goals)) +
+  geom_point(aes(color = Promedio), size = 5, alpha = 0.8) +
+  
+  geom_text_repel(aes(label = paste(Player, "\n(", Goals, " goles)")), 
+                  fontface = "bold", 
+                  box.padding = 0.5,
+                  point.padding = 0.5,
+                  size = 3) + 
+    scale_color_gradient(low = "lightblue", high = "darkblue") +
+  labs(
+    title = "Top 10 Goleadores Históricos",
+    subtitle = "Goles vs Partidos Jugados",
+    x = "Partidos Jugados",
+    y = "Goles Totales",
+    color = "Promedio Gol/Partido") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 16),
+    legend.position = "bottom" )
+```
+
+## 2.2 Mejores Jugadores en finales
+
+
+```{r}
+#install.packages("ggsoccer")
+library(tidyverse)
+library(ggimage)
+library(ggsoccer)
+
+
+mvps <- "./datos/entrenadores_mvps.csv"
+
+df_completo <- read_csv(mvps)
+
+
+top_11 <- df_completo %>%
+  select(club, mvp, position) %>% 
+  filter(position == "winner") %>% 
+  count(mvp, sort = TRUE, name = "titulos")
+
+
+
+  once_final <- c(
+    "Thibaut Courtois",
+    "Paolo Maldini",
+    "Frank Rijkaard",
+    "Virgil van Dijk",
+    "Sergio Ramos",
+    "Xavi",
+    "Franz Roth",
+    "Johan Cruyff",
+    "Paco Gento",
+    "Alfredo Di Stefano",
+    "Lionel Messi")
+
+
+  coordenadas_433 <- tibble(
+    orden_posiciones = 1:11,
+    posiciones = c("GK", "LB", "CB", "CB", "RB", "LCM", 
+                   "CM", "RCM", "LW", "ST", "RW"),
+    
+    x = c(5,  25, 20, 20, 25,  50, 45, 50,  75, 88, 75), 
+  
+    y = c(50, 15, 35, 65, 85,  25, 50, 75,  20, 50, 80))
+  
+  
+  equipo_mvp <- data.frame(
+    mvp = once_final,
+    orden_posiciones = 1:11
+  ) %>%
+    left_join(coordenadas_433, by = "orden_posiciones")
+  
+
+  conteo_mvps <- df_completo %>%
+    filter(position == "winner") %>% 
+    count(mvp, name = "titulos")
+  
+  datos_grafico <- equipo_mvp %>%
+    left_join(conteo_mvps, by = "mvp") %>% 
+    mutate(nombres_jugadores = case_when(
+      mvp == "Thibaut Courtois"   ~ "curtu.jpg",       
+      mvp == "Paolo Maldini"      ~ "maldini.jpg",   
+      mvp == "Frank Rijkaard"     ~ "rijkaard.jpg",
+      mvp == "Virgil van Dijk"    ~ "van dijk.webp",
+      mvp == "Sergio Ramos"       ~ "ramos.webp",
+      mvp == "Xavi"               ~ "xavi.jpg",
+      mvp == "Franz Roth"         ~ "roth.webp",
+      mvp == "Johan Cruyff"       ~ "cruyff.jpg",
+      mvp == "Paco Gento"         ~ "gento.jpg",
+      mvp == "Alfredo Di Stefano" ~ "di stefano.jpg",
+      mvp == "Lionel Messi"       ~ "messi.jpg")) %>% 
+    mutate(ruta_imagen = paste0("./imagenes/", nombres_jugadores))
+  
+  # 5. DIBUJAR
+  ggplot(datos_grafico) +
+    annotate_pitch(
+      dimensions = pitch_statsperform, 
+      fill = "green", 
+      colour = "white"
+    ) +
+    theme_pitch() +
+    coord_flip() + 
+    geom_image(aes(x = x, y = y, image = ruta_imagen), size = 0.08) +
+    
+    
+    geom_label(
+      aes(x = x, y = y, label = paste(mvp, "\n", titulos, "")), 
+      vjust = 1.5, 
+      size = 3, 
+      fontface = "bold",
+      alpha = 0.9) +
+    labs(title = "11 MVP's de finales de Champions League")
+```
+
+---
+
+## 3. ENTRENADORES
+
+```{r}
+library(tidyverse)
+library(gt)
+
+ucl_finals <- "./datos/ucl-soccer-1955-2019.csv"
+
+ucl_finals <- read_csv(ucl_finals)
+
+tabla_entrenadores <- ucl_finals %>%
+  group_by(coach) %>%
+  summarise(
+    Finales = n(),
+    Victorias = sum(position == "winner"), 
+    Derrotas = sum(position == "runner up"))%>%
+  ungroup() %>%
+  arrange(desc(Finales), desc(Victorias)) %>%
+  filter(coach != "unknown")
+
+
+
+tabla_final<- tabla_entrenadores %>%
+  gt() %>%
+  opt_interactive(use_search = TRUE,
+                  use_filters = TRUE,
+                  use_resizers = FALSE,
+                  use_compact_mode = FALSE,
+                  use_page_size_select = FALSE) %>%
+  tab_header(
+    title = md("Entrenadores finalistas de champions"),
+    subtitle = md("Análisis de los entrenadores finalistas (1955/56 - 2023/2024")) %>%
+  opt_align_table_header(align = "left") %>%
+  cols_label(
+    coach = md("**Entrenador**"),
+    Finales = md("**Total Finales**"),
+    Victorias = md("**Victorias**"),
+    Derrotas = md("**Derrotas**")) %>%
+  cols_align(
+    align = "center",
+    columns = c(Finales, Victorias, Derrotas)) %>%
+  fmt_number(
+    columns = c(Finales, Victorias, Derrotas),
+    decimals = 0) %>%
+  tab_style(
+    style = cell_fill(color = "indianred"), 
+    locations = cells_body(
+      columns = Derrotas, 
+      rows = Derrotas > 0)) %>%
+  tab_style(
+    style = cell_fill(color = "lightblue"),
+    locations = cells_body(
+      columns = Victorias,
+      rows = Victorias > 0)) %>%
+  opt_row_striping() %>%
+  tab_options(
+    heading.background.color = "blue",
+    column_labels.border.bottom.color = "black", 
+    table_body.border.bottom.color = "black",
+    table_body.hlines.color = "white"
+  ) %>%
+  tab_source_note(md("Fuente: Datos obtenidos de **Kaggle** ( https://www.kaggle.com )")) %>% 
+  tab_source_note(md("El color de las celdas indican las Victorias (azul) o las Derrotas (rojo).")) 
+
+
+
+tabla_final
+```
+
+
+
+---
+
+## 4. PAISES { .center }
+
+## 4.1 Paises ganadores
+
+```{r}
+library(tidyverse)
+library(highcharter)  #install.packages("highcharter")
+
+ucl_finals <- "./datos/ucl-finals.csv"
+
+df <- read_csv(ucl_finals)
+  
+
+top_5_paises <- df %>%
+  rename(Paises = `winner-country` ) %>% 
+  mutate(Paises = str_replace(Paises,
+                                      "West Germany", "Germany")) %>%
+  count(Paises) %>%
+  arrange(desc(n)) %>%
+  head(5)
+
+
+hchart(top_5_paises, "pie", hcaes(x = Paises, y = n)) %>%
+  hc_add_theme(hc_theme_economist()) %>% 
+  hc_size(height = 500)
+```
+
+  
+
+## 4.2 Paises con sede
+
+```{r}
+
+library(tidyverse) 
+library(plotly)    
+
+ruta_a_datos_2 <- "./datos/ucl-finals.csv"
+
+df_completo <- read.csv(ruta_a_datos_2)
+
+df_final <- df_completo %>% 
+  rename(Pais = final.country, Espectadores = attendance, 
+         Estadio = stadium) %>% 
+  mutate(Espectadores = as.numeric(Espectadores)) %>% 
+  group_by(Pais) %>% 
+  arrange(desc(Espectadores)) %>% 
+  slice(1) %>% 
+  ungroup() %>% 
+  select(Estadio, Pais, Espectadores)
+
+#Para realizar este mapa iteractivo , nos hemos apoyado en el siguiente trabajo : 
+# " https://ricardofreirev.github.io/trabajo_BigData_equipo/my_trabajo_BigData.html "
+
+
+datos_mapa <- df_final %>%
+  mutate(color_fijo = 1) %>% 
+  mutate(Pais_Mapa = case_when(
+    Pais %in% c("England", "Scotland", "Wales") ~ "United Kingdom",
+    Pais == "West Germany" ~ "Germany",
+    Pais == "Soviet Union" ~ "Russia",
+    Pais == "Yugoslavia" ~ "Serbia",
+    TRUE ~ Pais)) 
+
+map_plot <- plot_geo(data = datos_mapa,
+                     locations = ~Pais_Mapa,
+                     z = ~Espectadores, 
+                     text = ~paste(
+                       "<b>País:</b>", Pais, "<br>",
+                       "<b>Estadio:</b>", Estadio, "<br>",
+                       "<b>Espectadores:</b>", format(Espectadores, big.mark=".")),
+                     colors = "Blues") %>%
+  add_trace(z = ~color_fijo,
+            locations = ~Pais_Mapa,
+            type = "choropleth",
+            locationmode = "country names",
+            colorscale = "Blues",
+            marker = list(line = list(color = "white", width = 0.5)), 
+            showscale = FALSE) %>%
+  layout(title = "Sedes de Finales de Champions (Estadio y Asistencia)",
+         geo = list( showframe = FALSE,
+                    projection = list(type = "mercator"),
+                    showland = TRUE,
+                    landcolor = "lightgray",
+                    countrycolor = "white"),
+         height = 600 ) %>%
+  config(displayModeBar = FALSE)   
+
+
+map_plot
+```
+
+---
+
+## 5. Asistencia en Finales
+
+```{r}
+
+library(tidyverse)
+library(gganimate)
+library(scales)
+library(gifski)
+
+ruta_a_datos_2 <- "./datos/ucl-finals.csv"
+
+df_completo <- read_csv(ruta_a_datos_2)
+
+variacion_asistencia <- df_completo %>% 
+  rename(Año = season, Asistencia = attendance ) %>% 
+  mutate(Asistencia = as.numeric(Asistencia)) %>% 
+  mutate(Año = parse_number(Año) + 1) %>% 
+  select(Año, Asistencia) %>% 
+  drop_na()
+
+animacion_asistencia <- ggplot(variacion_asistencia, aes(x = Año, y = Asistencia)) +
+  
+  # LÍNEA Y PUNTO
+  geom_line(color = "#1f77b4", size = 1.2) +
+  geom_point(color = "red", size = 4) + 
+  
+  
+  scale_y_continuous(
+    labels = scales::label_comma(), 
+    breaks = seq(0, 140000, 20000), 
+    limits = c(0, 140000)) +
+  
+  labs(
+    title = "Evolución de la Asistencia en Finales",
+    x = "Temporada",
+    y = "Espectadores") +
+  theme_minimal() +
+  theme(
+    plot.title = element_text(face = "bold", size = 20),
+    panel.grid.minor = element_blank()) +
+  transition_reveal(Año) 
+
+ animate(animacion_asistencia, renderer = gifski_renderer())
+```
+
+
+---
+
+## 6. CONCLUSIONES { .center }
+
+En conclusión, dudamos mucho que alguno/a no conociera ya la existencia de la competición de clubes más prestigiosa de Europa, pero si este fuera el caso, esperamos que nuestro trabajo les haya servido para aprender un poco más sobre esta gran competición. Muchísimas gracias por su atención y esperamos que les haya gustado. 

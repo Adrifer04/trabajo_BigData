@@ -1,0 +1,34 @@
+---
+title: Champions League             
+image: imagenes/portada.jpeg     
+about:
+  template: jolla        
+  image-width: 15em         
+  image-shape: round  
+  links:
+    - icon: envelope
+      text: e-mail
+      url: "mailto:<afebru@alumni.uv.es>"            
+    - icon: linkedin
+      text: LinkedIn
+      href: https://linkedin.com/<tu-usuario-Linkedin>     
+    - icon: github
+      text: Github
+      href: https://github.com/Adrifer04         
+
+
+toc: false
+code-tools: false
+---
+        
+Buenas chic@s, somos Simon Casañ, Adrián Fernández y Carlos Hueso
+      
+Esta web sirve para presentar el trabajo en equipo para la asignatura "Programación y manejo de datos en la era Del Big Data", optativa de GECO en la Facultad de Economía de la Universitat de València.
+
+La web de la asignatura está [aquí](https://perezp44.github.io/intro-ds-25-26-web/){target="_blank"} y los trabajos de mis compañeros de curso puedes verlos [aquí](https://perezp44.github.io/intro-ds-25-26-web/05-trabajos-estudiantes.html){target="_blank"}.
+
+
+Nuestro trabajo lleva por título : "Champions League". Hemos realizado este trabajo sobre la Champions League, para que podamos conocer todo aquello que no se ve a simple vista en los campos de fútbol de Europa.
+
+
+El trabajo puede verse [aquí](my_trabajo_BigData.html){target="_blank"}, y las slides [aquí](my_slides_BigData.html){target="_blank"}.
