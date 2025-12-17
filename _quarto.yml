@@ -107,7 +107,7 @@ website:
   page-footer:
     border: true
     background: "#0e1e5b"         
-    left: "© 2025 Pedro Navaja"   
+    left: "El trio Futbolero"   
     center: "Hecho con [Quarto](https://quarto.org)"
     right:
       - icon: github
